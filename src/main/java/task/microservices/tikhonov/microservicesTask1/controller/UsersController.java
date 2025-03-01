@@ -7,36 +7,36 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import task.microservices.tikhonov.microservicesTask1.model.User;
-import task.microservices.tikhonov.microservicesTask1.service.UserServiceImplementation;
+import task.microservices.tikhonov.microservicesTask1.service.UserService;
 
 @Controller
 @RequestMapping("/app")
 public class UsersController {
 
-    private UserServiceImplementation userServiceImplementation;
+    private UserService userService;
 
     @Autowired
-    public UsersController(UserServiceImplementation userServiceImplementation) {
-        this.userServiceImplementation = userServiceImplementation;
+    public UsersController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping()
     public String getUsers(Model model) {
-        model.addAttribute("users", userServiceImplementation.getUsers());
+        model.addAttribute("users", userService.getUsers());
         return "users/users";
     }
 
     @GetMapping("/{id}")
     public String getUser(@PathVariable int id, Model model) {
         System.out.println("get: " + id);
-        model.addAttribute("user", userServiceImplementation.getUser(id));
+        model.addAttribute("user", userService.getUser(id));
         return "users/user";
     }
 
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable int id) {
         System.out.println("delete: " + id);
-        userServiceImplementation.deleteUser(id);
+        userService.deleteUser(id);
         return "redirect:/app";
     }
 
@@ -50,13 +50,13 @@ public class UsersController {
         if (bindingResult.hasErrors()) {
             return "users/new";
         }
-        userServiceImplementation.addUser(user);
+        userService.addUser(user);
         return "redirect:/app";
     }
 
     @GetMapping("/{id}/edit")
     public String editUserForm(@PathVariable int id, Model model) {
-        model.addAttribute("user", userServiceImplementation.getUser(id));
+        model.addAttribute("user", userService.getUser(id));
         return "users/edit";
     }
 
@@ -66,7 +66,7 @@ public class UsersController {
         if (bindingResult.hasErrors()) {
             return "users/edit";
         }
-        userServiceImplementation.updateUser(id, user);
+        userService.updateUser(id, user);
         return "redirect:/app";
     }
 
